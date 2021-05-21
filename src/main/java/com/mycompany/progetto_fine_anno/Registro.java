@@ -124,7 +124,7 @@ public class Registro  implements Serializable
         }
         return s;
     }
-     public String tiPregoFunziona(Abbonamento[] d)
+     public String stampaOrdinato(Abbonamento[] d)
      {
                  String s = "";
         try

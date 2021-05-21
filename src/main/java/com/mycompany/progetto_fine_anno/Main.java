@@ -163,7 +163,7 @@ public class Main
                                      if(Appoggio[i]==null) 
                                          Appoggio[i]=r.ordina()[i];
                                  }         
-                                     System.out.println(r.tiPregoFunziona(Appoggio));
+                                     System.out.println(r.stampaOrdinato(Appoggio));
    
                               
                                  
