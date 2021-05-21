@@ -4,8 +4,13 @@
  * and open the template in the editor.
  */
 package com.mycompany.progetto_fine_anno;
+import eccezioni.EccezionePosizioneNonValida;
+import eccezioni.FileException;
+import java.io.IOException;
 import java.time.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Danilo
@@ -19,7 +24,8 @@ public class Main
             int abbonamenti = 0;
             Registro r=new Registro();
             Abbonamento b;
-           
+            String nomeFile="registro.txt";
+           String nomeFileBinario="Registro.bin";
             Scanner tastiera = new Scanner (System.in);
              String [] vociMenu=new String [8];
             vociMenu[0]="Esci";
@@ -28,16 +34,36 @@ public class Main
             vociMenu[3]="Rimuovi abbonamenti scaduti";
             vociMenu[4]="Ricerca abbonamenti a partire dal nome & congome";
             vociMenu[5]="Visualizza gli abbonamenti in ordina cronologico";
-            vociMenu[6]="Salva gli abbonamnti in CSV";
+            vociMenu[6]="Esporta gli abbonamenti in CSV";
             vociMenu[7]="Salva dati su un file binario";
-             
+                try 
+                            {
+                    r=r.caricaRegistro(nomeFileBinario);
+                    System.out.println("Dati caricati correttamente");
+                } 
+                catch (IOException ex) 
+                {
+                    System.out.println("Impossibile accedere al file in lettura. I dati non sono stati caricati");
+                } 
+                catch (FileException ex) 
+                {
+                    System.out.println(ex.toString());
+                }
              Menu menu=new Menu(vociMenu);
              do
              {
+                try
+                {
                  sceltaUtente=menu.sceltaMenu(); 
                  
                  switch(sceltaUtente)
                  {
+                     case 0:
+                     {
+                        System.out.println("L'applicazione verrà terminata");
+                        break;
+                     }
+
                      case 1:
                      {
                         
@@ -48,7 +74,6 @@ public class Main
                          System.out.println(abbonamenti);
                          System.out.println("Inserisci nome : ");
                          b.setNome(tastiera.nextLine());
-                        
                          System.out.println("Inserisci cognome : ");
                          b.setCognome(tastiera.nextLine());
                           System.out.println("Inserisci scadenza :  Settimanale/Mensile/Annua");
@@ -61,16 +86,7 @@ public class Main
                          anno=tastiera.nextInt();
                          abbonamenti++;
                          b.setVendita(LocalDate.of(anno, mese, giorno));
-                         r.aggiungiAccesso(b);
-                         
-                         /*
-                         System.out.println(b.getCodiceIdenntificativo()+" "+b.getCognome()+" "+b.getNome()+" "+b.getTipologia()+" "+b.getVendita());
-                         System.out.println(b.toString());
-                         System.out.println(r.getnAbbonamentiPresenti());*/
-                                 
-                    
-                         //b.contorollaTipologia(b.getTipologia());
-                         
+                         r.aggiungiAccesso(b);  
                           b.setNome(tastiera.nextLine());
                          
 
@@ -151,12 +167,56 @@ public class Main
    
                               
                                  
-                                 // System.out.println(r.toString());
+                                 
                               
                               
                               break;
                           }
+                          case 6:
+                          {
+
+                              try 
+                              {
+                                  r.salvaAbbo(nomeFile);
+                                  System.out.println("Salvataggio avvenuto correttamente");
+                              }
+                              catch (IOException ex) 
+                              {
+                                System.out.println("Salvataggio non avvenuto ");
+                              }
+                              catch(EccezionePosizioneNonValida | FileException e2)
+                              {
+                                 System.out.println("Salvataggio non avvenuto correttamente");
+                              } 
+                              
+                              break;
+                          }
+                          case 7:
+                          {
+                              try 
+                              {
+                                  r.salvaRegistro(nomeFileBinario);
+                                  System.out.println("Salvataggio avvenuto correttamente");
+                              }
+                              catch (IOException ex) 
+                              {
+                                System.out.println("Impossibile accedere al file. Salvataggio non avvenuto ");
+                              }
+                                 catch(FileException e2)
+                                {
+                                    System.out.println(e2.toString());
+                                } 
+
+                            
+                              break;
+                          }
                  }
+                } //parentesi try
+                catch (InputMismatchException | NumberFormatException | DateTimeException e1)
+                {
+                    tastiera.nextLine();
+                    System.out.println("Input non corretto");
+                }
              }while (sceltaUtente!=0);
 
         }

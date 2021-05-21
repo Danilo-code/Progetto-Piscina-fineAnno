@@ -5,13 +5,18 @@
  */
 package com.mycompany.progetto_fine_anno;
 
+import eccezioni.EccezionePosizioneNonValida;
+import eccezioni.FileException;
+import file.TextFile;
+import java.io.*;
+import java.io.IOException;
 import java.time.*;
 
 /**
  *
  * @author Danilo
  */
-public class Registro 
+public class Registro  implements Serializable
 {
     private  Abbonamento[] listaAbbonamenti;
     private int nAbbonamentiPresenti=0;
@@ -51,7 +56,7 @@ public class Registro
          for (int i=0;i<nAbbonamentiPresenti;i++)
          {
              b=listaAbbonamenti[i];
-             if (d.isEqual(b.getVendita()))
+             if (d.isEqual(b.getScadenza(b, b.getTipologia())))
              {
                  return 0;
              }
@@ -139,10 +144,12 @@ public class Registro
      public int eliminaAbb(LocalDate f)
      {
          Abbonamento b;
+         String t;
          for (int i=0;i<nAbbonamentiPresenti;i++)
          {
              b=listaAbbonamenti[i];
-             if (f.isEqual(b.getVendita()))
+             t=b.getTipologia();
+             if (f.isEqual(b.getScadenza(b, t)))
              {
                  aggiornaAbbonamenti(i);
                  return 0;
@@ -161,6 +168,52 @@ public class Registro
          
      }
      
+     
+     
+         public void salvaAbbo(String nomeFile) throws IOException, EccezionePosizioneNonValida, FileException
+    {
+        TextFile f1=new TextFile(nomeFile,'W');
+        
+        for(int i=0;i<MAX_ABBONAMENTI;i++)
+        {
+
+                
+                if(listaAbbonamenti[i]!=null )
+                {
+                    f1.toFile(listaAbbonamenti[i].getCodiceIdenntificativo()+";"+listaAbbonamenti[i].getCognome()+";"+listaAbbonamenti[i].getNome()+";"+listaAbbonamenti[i].getVendita()+";"+listaAbbonamenti[i].getTipologia()+";"+listaAbbonamenti[i].getVendita()+";");
+                }
+           
+
+        }
+        f1.close();
+        
+    }
+         
+         public void salvaRegistro(String nomeFile)throws IOException, FileException
+         {
+             FileOutputStream f1= new FileOutputStream(nomeFile);
+             ObjectOutputStream writer= new ObjectOutputStream(f1);
+             writer.writeObject(this);
+             writer.flush();
+             writer.close();
+         }
+         public Registro caricaRegistro (String nomeFile) throws IOException, FileException
+         {
+             Registro d;
+             FileInputStream f1=new FileInputStream(nomeFile);
+             ObjectInputStream reader=new ObjectInputStream(f1);
+            try 
+            {
+                 d=(Registro)reader.readObject();
+                 reader.close();
+                 return d;
+            } 
+            catch (ClassNotFoundException ex) 
+            {
+                reader.close();
+                throw new FileException("Errore di lettura");
+            }   
+         }
      }
 
 

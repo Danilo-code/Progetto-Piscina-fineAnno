@@ -5,19 +5,25 @@
  */
 package com.mycompany.progetto_fine_anno;
 
+import java.io.Serializable;
 import java.time.*;
 
 /**
  *
  * @author Danilo
  */
-public class Abbonamento 
+public class Abbonamento implements Serializable
 {
     private int codiceIdenntificativo;
     private String nome, cognome;
     private String tipologia;
     private LocalDate vendita;
     private LocalDate scadenza;
+    private final int MAX_ABB=100;
+
+    public int getMAX_ABB() {
+        return MAX_ABB;
+    }
 
     public Abbonamento (int anno, int mese, int giorno, String tipologia, String nome, String cognome, int codiceIdentificativo)
     {
@@ -95,22 +101,47 @@ public class Abbonamento
         return vendita;
     }
     
-    
+    public LocalDate getScadenza(Abbonamento b, String t)
+    {
+        
+        switch(t)
+        {
+            case "Settimanale":
+            case "settimanale":
+            {
+                 scadenza=b.getVendita().plusDays(7);
+                
+                break;
+            }
+            case "Mensile" :
+            case "mensile" :
+            {
+                scadenza=b.getVendita().plusMonths(1);
+                 break;
+            }
+            case "Annua" :
+            case "annua" :
+            {
+                scadenza=b.getVendita().plusYears(1);
+                 break;
+            }
+            default:
+            {
+                scadenza=null;
+            }
+        }
+        return scadenza;
+        
+    }
 
 
     @Override
     public String toString() {
-        return "Nome : "+getNome()+" Cognome : "+getCognome()+" Tipologia : "+getTipologia()+" Codice identificativo : "+getCodiceIdenntificativo()+" "+"Data di acquisto "+getVendita(); //" Abbonamento acquistato il : "+ getVendita()+
+        return "Nome : "+getNome()+" Cognome : "+getCognome()+" Tipologia : "+getTipologia()+" Codice identificativo : "+getCodiceIdenntificativo()+" "+"Data di acquisto "+getVendita()+" Scadde il : "+getScadenza(this, getTipologia()); //" Abbonamento acquistato il : "+ getVendita()+
     }
     
     
-    public String contorollaTipologia(String g)
-    {
-        if (g.compareTo("Mensile")==0 || g.compareTo("mensile")==0 || g.compareTo("Settimanale")==0 ||g.compareTo("settimanale")==0 || g.compareTo("Annuale")==0 || g.compareTo("annuale")==0)
-        return g;
-        else 
-            return g="Scadenza non valida, ripetere";
-    }
+
     /*
     public int controllaGiorno (int giorno , int mese)
     {
