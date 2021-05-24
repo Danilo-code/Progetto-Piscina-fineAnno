@@ -19,11 +19,14 @@ public class Abbonamento implements Serializable
     private String tipologia;
     private LocalDate vendita;
     private LocalDate scadenza;
-    private final int MAX_ABB=100;
+  
 
-    public int getMAX_ABB() {
-        return MAX_ABB;
-    }
+/**
+ * 
+ * 
+ * 
+ * 
+*/
 
     public Abbonamento (int anno, int mese, int giorno, String tipologia, String nome, String cognome, int codiceIdentificativo)
     {
@@ -65,7 +68,8 @@ public class Abbonamento implements Serializable
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+            this.nome = nome;
+       
     }
 
     public void setCognome(String cognome) {
@@ -74,6 +78,10 @@ public class Abbonamento implements Serializable
 
     public void setTipologia(String tipologia) { 
         this.tipologia = tipologia;
+    }
+
+    public void setScadenza(LocalDate scadenza) {
+        this.scadenza = scadenza;
     }
 
 
@@ -110,6 +118,7 @@ public class Abbonamento implements Serializable
             case "settimanale":
             {
                  scadenza=b.getVendita().plusDays(7);
+                 b.setTipologia("Settimanale");
                 
                 break;
             }
@@ -117,16 +126,24 @@ public class Abbonamento implements Serializable
             case "mensile" :
             {
                 scadenza=b.getVendita().plusMonths(1);
+                 b.setTipologia("Mensile");
                  break;
             }
             case "Annua" :
             case "annua" :
             {
                 scadenza=b.getVendita().plusYears(1);
+                 b.setTipologia("Annua");
                  break;
+            }
+            case "":
+            {
+                b.setTipologia(" ");
+                scadenza=null;
             }
             default:
             {
+                b.setTipologia("La tipologia inserita non è valida ");
                 scadenza=null;
             }
         }
@@ -137,7 +154,7 @@ public class Abbonamento implements Serializable
 
     @Override
     public String toString() {
-        return "Nome : "+getNome()+" Cognome : "+getCognome()+" Tipologia : "+getTipologia()+" Codice identificativo : "+getCodiceIdenntificativo()+" "+"Data di acquisto "+getVendita()+" Scadde il : "+getScadenza(this, getTipologia()); //" Abbonamento acquistato il : "+ getVendita()+
+        return "Nome : "+getNome()+"  Cognome : "+getCognome()+"  Tipologia : "+getTipologia()+"  Codice identificativo : "+getCodiceIdenntificativo()+"  Data di acquisto "+getVendita()+"  Scade il : "+getScadenza(this, getTipologia()); //" Abbonamento acquistato il : "+ getVendita()+
     }
     
     

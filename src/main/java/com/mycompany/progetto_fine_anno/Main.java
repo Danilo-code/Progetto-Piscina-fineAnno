@@ -66,7 +66,7 @@ public class Main
 
                      case 1:
                      {
-                        
+                        int verifica;
                          b=new Abbonamento();
                          int giorno,mese,anno;
                          System.out.println("Codice : ");
@@ -74,6 +74,7 @@ public class Main
                          System.out.println(abbonamenti);
                          System.out.println("Inserisci nome : ");
                          b.setNome(tastiera.nextLine());
+                         
                          System.out.println("Inserisci cognome : ");
                          b.setCognome(tastiera.nextLine());
                           System.out.println("Inserisci scadenza :  Settimanale/Mensile/Annua");
@@ -83,11 +84,16 @@ public class Main
                          System.out.println("Inserisci mese dell'acquisto : ");
                          mese=tastiera.nextInt();
                          System.out.println("Inserisci anno dell'acquisto : ");
-                         anno=tastiera.nextInt();
+                         anno=tastiera.nextInt();                        
+                         b.setVendita(LocalDate.of(anno, mese, giorno));  
+                         r.aggiungiAccesso(b);
+                         verifica=r.aggiungiAccesso(b);
+                         if (verifica==0)
+                             System.out.println("Operazione riuscita");
+                         else if (verifica==-1)
+                             System.out.println("Operazione non riuscita");
                          abbonamenti++;
-                         b.setVendita(LocalDate.of(anno, mese, giorno));
-                         r.aggiungiAccesso(b);  
-                          b.setNome(tastiera.nextLine());
+                         tastiera.nextLine();
                          
 
                          
@@ -134,7 +140,7 @@ public class Main
                               System.out.println("Eliminazione riuscita");
                           else
                              System.out.println("Non è stato eliminato nessun abbonamento");
-                          System.out.println(r.toString());
+                         
                          break;
                      }
                           case 4:
@@ -213,9 +219,9 @@ public class Main
                  }
                 } //parentesi try
                 catch (InputMismatchException | NumberFormatException | DateTimeException e1)
-                {
-                    tastiera.nextLine();
+                {   
                     System.out.println("Input non corretto");
+                    tastiera.nextLine();
                 }
              }while (sceltaUtente!=0);
 
